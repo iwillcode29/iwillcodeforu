@@ -6,6 +6,10 @@ import {
   calculateTimeLeft,
   isCountdownExpired,
   calculateProgress,
+  loadTrackingData,
+  addDailyFeeling,
+  getTodayFeeling,
+  hasTrackedToday,
 } from "../utils/countdownData";
 import {
   SettingsButton,
@@ -14,7 +18,8 @@ import {
   CountdownDisplay,
   QuoteSection,
   ProgressBar,
-  BackgroundAnimation,
+  DailyTracker,
+  ProgressChart,
 } from "../components/CountdownComponents";
 import { colorPalette } from "../utils/sharedStyles";
 
@@ -30,6 +35,11 @@ const CountdownPage = () => {
   });
   const [personName, setPersonName] = useState(defaultPersonName);
   const [showSettings, setShowSettings] = useState(false);
+  
+  // States สำหรับการติดตามประจำวัน
+  const [trackingData, setTrackingData] = useState([]);
+  const [todayFeeling, setTodayFeeling] = useState(null);
+  const [trackedToday, setTrackedToday] = useState(false);
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -42,6 +52,23 @@ const CountdownPage = () => {
 
     return () => clearInterval(timer);
   }, [targetDate]);
+
+  // โหลดข้อมูลการติดตามเมื่อ component mount
+  useEffect(() => {
+    const data = loadTrackingData();
+    setTrackingData(data);
+    
+    const feeling = getTodayFeeling();
+    setTodayFeeling(feeling);
+    setTrackedToday(hasTrackedToday());
+  }, []);
+
+  const handleDailyTrack = (feeling) => {
+    const newData = addDailyFeeling(feeling);
+    setTrackingData(newData);
+    setTodayFeeling(feeling);
+    setTrackedToday(true);
+  };
 
   const isExpired = isCountdownExpired(timeLeft);
   const progress = calculateProgress(targetDate);
@@ -77,6 +104,14 @@ const CountdownPage = () => {
         <QuoteSection />
 
         <ProgressBar progress={isExpired ? 100 : progress} />
+
+        {/* <DailyTracker
+          onTrack={handleDailyTrack}
+          hasTrackedToday={trackedToday}
+          todayFeeling={todayFeeling}
+        />
+
+        <ProgressChart trackingData={trackingData} /> */}
       </div>
     </div>
   );

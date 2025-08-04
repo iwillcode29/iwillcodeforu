@@ -1,5 +1,5 @@
 import React from "react";
-import { CountdownBox } from "../utils/sharedStyles";
+import { CountdownBox, StyledButton, cardBoxStyle, colorPalette } from "../utils/sharedStyles";
 import { countdownColors, countdownLabels } from "../utils/countdownData";
 
 export const SettingsButton = ({ showSettings, setShowSettings }) => (
@@ -76,7 +76,7 @@ export const SettingsPanel = ({
 
 export const CountdownTitle = ({ personName }) => (
   <h1 className="text-4xl md:text-6xl font-bold mb-8 text-black">
-    อีกกี่วันฉันจะลืม{personName}
+    Countdown to Forget
   </h1>
 );
 
@@ -142,3 +142,147 @@ export const ProgressBar = ({ progress }) => (
     <p className="text-xs text-gray-800 mt-2">ความคืบหน้าในการลืม</p>
   </div>
 );
+
+export const DailyTracker = ({ onTrack, hasTrackedToday, todayFeeling }) => (
+  <div 
+    className="mt-8 mx-auto border-4 hover:scale-105 transition-all duration-300"
+    style={{
+      ...cardBoxStyle,
+      backgroundColor: colorPalette.white,
+      maxWidth: '500px',
+    }}
+  >
+    <h2 className="text-xl md:text-2xl font-bold mb-6 text-black">
+      วันนี้ยังคิดถึงไหม?
+    </h2>
+    
+    {hasTrackedToday ? (
+      <div className="text-center">
+        <div className="text-4xl md:text-6xl mb-4">
+          {todayFeeling === 'yes' ? '💔' : '😌'}
+        </div>
+        <p className="text-lg md:text-xl font-medium text-black mb-4">
+          {todayFeeling === 'yes' ? 'วันนี้ยังคิดถึง' : 'วันนี้ไม่คิดถึงแล้ว'}
+        </p>
+        <p className="text-sm text-gray-600">บันทึกแล้วสำหรับวันนี้</p>
+      </div>
+    ) : (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <StyledButton
+          onClick={() => onTrack('yes')}
+          backgroundColor={colorPalette.accent}
+          className="min-h-[80px]"
+        >
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-2xl">💔</span>
+            <span className="text-lg font-medium">ยังคิดถึง</span>
+          </div>
+        </StyledButton>
+        <StyledButton
+          onClick={() => onTrack('no')}
+          backgroundColor={colorPalette.secondary}
+          className="min-h-[80px]"
+        >
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-2xl">😌</span>
+            <span className="text-lg font-medium">ไม่คิดถึงแล้ว</span>
+          </div>
+        </StyledButton>
+      </div>
+    )}
+  </div>
+);
+
+export const ProgressChart = ({ trackingData }) => {
+  if (!trackingData || trackingData.length === 0) {
+    return null;
+  }
+
+  // คำนวณเปอร์เซ็นต์ของการไม่คิดถึงในช่วง 7 วันล่าสุด
+  const last7Days = trackingData.slice(-7);
+  const forgettingPercentage = last7Days.length > 0 
+    ? Math.round((last7Days.filter(day => day.feeling === 'no').length / last7Days.length) * 100)
+    : 0;
+
+  const maxItems = 14; // แสดงข้อมูล 14 วันล่าสุด
+  const displayData = trackingData.slice(-maxItems);
+
+  return (
+    <div 
+      className="mt-8 mx-auto border-4 hover:scale-105 transition-all duration-300"
+      style={{
+        ...cardBoxStyle,
+        backgroundColor: colorPalette.white,
+        maxWidth: '600px',
+        minHeight: '200px',
+      }}
+    >
+      <h3 className="text-xl md:text-2xl font-bold mb-6 text-black">
+        กราฟความคืบหน้าในการลืม
+      </h3>
+      
+      <div 
+        className="mb-6 p-4 border-4 rounded-3xl"
+        style={{
+          backgroundColor: colorPalette.light,
+          borderColor: colorPalette.secondary,
+        }}
+      >
+        <div className="text-3xl md:text-4xl font-bold mb-2" style={{ color: colorPalette.secondary }}>
+          {forgettingPercentage}%
+        </div>
+        <p className="text-sm md:text-base font-medium text-black">
+          ช่วง 7 วันล่าสุดที่ไม่คิดถึง
+        </p>
+      </div>
+
+      <div className="flex items-end justify-center gap-2 h-32 mb-6">
+        {displayData.map((day, index) => {
+          const isThinking = day.feeling === 'yes';
+          const height = isThinking ? '100%' : '30%';
+          const backgroundColor = isThinking ? colorPalette.accent : colorPalette.secondary;
+          
+          return (
+            <div key={index} className="flex flex-col items-center">
+              <div 
+                className="w-6 rounded-t-lg transition-all duration-300 hover:opacity-80 border-2"
+                style={{ 
+                  height, 
+                  backgroundColor,
+                  borderColor: colorPalette.text,
+                }}
+                title={`${day.date}: ${isThinking ? 'คิดถึง' : 'ไม่คิดถึง'}`}
+              />
+              <div className="text-xs font-medium text-black mt-2">
+                {new Date(day.date).getDate()}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      
+      <div className="flex justify-center gap-6 text-sm">
+        <div className="flex items-center gap-2">
+          <div 
+            className="w-4 h-4 rounded border-2"
+            style={{ 
+              backgroundColor: colorPalette.accent,
+              borderColor: colorPalette.text,
+            }}
+          ></div>
+          <span className="font-medium text-black">ยังคิดถึง</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div 
+            className="w-4 h-4 rounded border-2"
+            style={{ 
+              backgroundColor: colorPalette.secondary,
+              borderColor: colorPalette.text,
+            }}
+          ></div>
+          <span className="font-medium text-black">ไม่คิดถึงแล้ว</span>
+        </div>
+      </div>
+    </div>
+  );
+};
