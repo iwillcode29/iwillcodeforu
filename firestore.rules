@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.email == 'admin@yoga.com';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isValidBooking() {
+      let booking = request.resource.data;
+      return booking.keys().hasAll(['date', 'timeSlot', 'userInfo', 'status', 'amount']) &&
+             booking.timeSlot in ['09:00', '11:00'] &&
+             booking.status in ['confirmed', 'cancelled', 'pending'] &&
+             booking.amount is number &&
+             booking.amount > 0;
+    }
+    
+    function isValidPackage() {
+      let pkg = request.resource.data;
+      return pkg.keys().hasAll(['name', 'classes', 'price', 'description']) &&
+             pkg.classes is number &&
+             pkg.classes > 0 &&
+             pkg.price is number &&
+             pkg.price > 0;
+    }
+    
+    // Packages collection - readable by all, writable by admin only
+    match /packages/{packageId} {
+      allow read: if true; // Public packages
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Bookings collection
+    match /bookings/{bookingId} {
+      // Anyone authenticated can read their own bookings
+      // Admin can read all bookings
+      allow read: if isAuthenticated() && 
+                     (resource.data.userInfo.email == request.auth.token.email || isAdmin());
+      
+      // Only authenticated users can create bookings with valid data
+      allow create: if isAuthenticated() && 
+                       isValidBooking() &&
+                       request.resource.data.userInfo.email == request.auth.token.email;
+      
+      // Users can update their own bookings (for cancellation)
+      // Admin can update any booking
+      allow update: if isAuthenticated() && 
+                       isValidBooking() &&
+                       (resource.data.userInfo.email == request.auth.token.email || isAdmin());
+      
+      // Only admin can delete bookings
+      allow delete: if isAdmin();
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      // Users can read/write their own data
+      allow read, write: if isOwner(userId);
+      
+      // Admin can read all user data
+      allow read: if isAdmin();
+    }
+    
+    // Admin-only collections
+    match /admin/{document=**} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Analytics collection (read-only for users, read-write for admin)
+    match /analytics/{document=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}
