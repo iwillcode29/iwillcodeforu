@@ -1,13 +1,16 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect, useHistory } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { BookingProvider } from './contexts/BookingContext';
 import Header from './components/Header';
+import AdminButton from './components/AdminButton';
 import Login from './components/Login';
+import Homepage from './pages/Homepage';
 import BookingPage from './pages/BookingPage';
 import AdminDashboard from './pages/AdminDashboard';
 import BubblePage from './pages/BubblePage';
 import ExcuseGenerator from './pages/ExcuseGenerator';
+import CountdownPage from './pages/CountdownPage';
 import './i18n';
 
 // Protected Route Component
@@ -15,7 +18,7 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { user, isAdmin } = useAuth();
   
   if (!user) {
-    return <Login />;
+    return <Redirect to="/login" />;
   }
   
   if (adminOnly && !isAdmin()) {
@@ -25,71 +28,40 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   return children;
 };
 
-// Admin Button Component
-const AdminButton = () => {
-  const { isAdmin } = useAuth();
-  const history = useHistory();
-
-  if (!isAdmin()) return null;
-
-  return (
-    <div style={{
-      position: 'fixed',
-      bottom: '20px',
-      right: '20px',
-      zIndex: 1000
-    }}>
-      <button
-        onClick={() => history.push('/admin')}
-        className="btn btn-primary"
-        style={{
-          borderRadius: '50px',
-          padding: '15px 20px',
-          fontSize: '14px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-        }}
-      >
-        Admin Panel
-      </button>
-    </div>
-  );
-};
-
 // Main App Content
 const AppContent = () => {
-  const { user } = useAuth();
-
-  if (!user) {
-    return (
-      <div>
-        <Header />
-        <Login />
-      </div>
-    );
-  }
-
   return (
-    <BookingProvider>
-      <div>
-        <Header />
-        <Switch>
-          <Route exact path="/">
-            <ProtectedRoute>
+    <div>
+      <Switch>
+        <Route exact path="/">
+          <Homepage />
+        </Route>
+        <Route exact path="/login">
+          <Header />
+          <Login />
+        </Route>
+        <Route exact path="/booking">
+          <ProtectedRoute>
+            <BookingProvider>
+              <Header />
               <BookingPage />
-            </ProtectedRoute>
-          </Route>
-          <Route path="/admin">
-            <ProtectedRoute adminOnly={true}>
+            </BookingProvider>
+          </ProtectedRoute>
+        </Route>
+        <Route path="/admin">
+          <ProtectedRoute adminOnly={true}>
+            <BookingProvider>
+              <Header />
               <AdminDashboard />
-            </ProtectedRoute>
-          </Route>
-          <Route path="*">
-            <Redirect to="/" />
-          </Route>
-        </Switch>
-        <AdminButton />
-      </div>
-    </BookingProvider>
+              <AdminButton />
+            </BookingProvider>
+          </ProtectedRoute>
+        </Route>
+        <Route path="*">
+          <Redirect to="/" />
+        </Route>
+      </Switch>
+    </div>
   );
 };
 
@@ -105,6 +77,9 @@ function App() {
             </Route>
             <Route exact path="/excuse">
               <ExcuseGenerator />
+            </Route>
+            <Route exact path="/countdown">
+              <CountdownPage />
             </Route>
             <Route path="*">
               <AppContent />

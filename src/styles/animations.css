@@ -1,0 +1,61 @@
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px) scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
+
+@keyframes fadeOut {
+  from { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+  to { 
+    opacity: 0; 
+    transform: translateY(-20px) scale(0.95); 
+  }
+}
+
+@keyframes buttonBounce {
+  0%, 20%, 50%, 80%, 100% { 
+    transform: translateY(0); 
+  }
+  40% { 
+    transform: translateY(-8px); 
+  }
+  60% { 
+    transform: translateY(-4px); 
+  }
+}
+
+@keyframes customPulse {
+  0% { 
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); 
+  }
+  50% { 
+    box-shadow: 0 6px 25px rgba(40, 167, 69, 0.5); 
+  }
+  100% { 
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); 
+  }
+}
+
+.fadeIn { 
+  animation: fadeIn 0.5s ease-out forwards; 
+}
+
+.fadeOut { 
+  animation: fadeOut 0.3s ease-in forwards; 
+}
+
+.bounce { 
+  animation: buttonBounce 0.6s ease; 
+}
+
+.custom-pulse { 
+  animation: customPulse 2s infinite; 
+} 
