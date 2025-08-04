@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const ExcuseGenerator = () => {
-  const [currentExcuse, setCurrentExcuse] = useState('');
-  const [language, setLanguage] = useState('thai');
+  const [currentExcuse, setCurrentExcuse] = useState("");
+  const [language, setLanguage] = useState("thai");
   const [isAnimating, setIsAnimating] = useState(false);
-  const [animationClass, setAnimationClass] = useState('');
+  const [animationClass, setAnimationClass] = useState("");
 
   const thaiExcuses = [
     "ท้องเสีย เพราะทานอาหารเก่าเมื่อคืน",
@@ -36,7 +36,7 @@ const ExcuseGenerator = () => {
     "หมดน้ำมัน ปั๊มปิด",
     "ภรรยาคลอดลูก (ฉุกเฉิน)",
     "ลิงเข้าบ้าน ทำของเสียหาย",
-    "นกบินชนกระจกรถ มองไม่เห็นทาง"
+    "นกบินชนกระจกรถ มองไม่เห็นทาง",
   ];
 
   const englishExcuses = [
@@ -69,26 +69,26 @@ const ExcuseGenerator = () => {
     "Ran out of gas, station closed",
     "Wife in labor (emergency)",
     "Monkey invaded house, chaos everywhere",
-    "Bird hit windshield, can't see road"
+    "Bird hit windshield, can't see road",
   ];
 
   const generateExcuse = () => {
     if (isAnimating) return; // Prevent multiple clicks during animation
-    
+
     setIsAnimating(true);
-    setAnimationClass('fadeOut');
-    
+    setAnimationClass("fadeOut");
+
     // First fade out the current excuse
     setTimeout(() => {
-      const excuses = language === 'thai' ? thaiExcuses : englishExcuses;
+      const excuses = language === "thai" ? thaiExcuses : englishExcuses;
       const randomIndex = Math.floor(Math.random() * excuses.length);
       setCurrentExcuse(excuses[randomIndex]);
-      setAnimationClass('fadeIn');
-      
+      setAnimationClass("fadeIn");
+
       // After fade in completes, reset animation state
       setTimeout(() => {
         setIsAnimating(false);
-        setAnimationClass('');
+        setAnimationClass("");
       }, 500);
     }, 300);
   };
@@ -111,189 +111,130 @@ const ExcuseGenerator = () => {
       60% { transform: translateY(-4px); }
     }
     
-         @keyframes pulse {
-       0% { box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); }
-       50% { box-shadow: 0 6px 25px rgba(40, 167, 69, 0.5); }
-       100% { box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); }
-     }
+    @keyframes customPulse {
+      0% { box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); }
+      50% { box-shadow: 0 6px 25px rgba(40, 167, 69, 0.5); }
+      100% { box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); }
+    }
      
-     @keyframes spin {
-       from { transform: rotate(0deg); }
-       to { transform: rotate(360deg); }
-     }
-     
-     .fadeIn { animation: fadeIn 0.5s ease-out forwards; }
-     .fadeOut { animation: fadeOut 0.3s ease-in forwards; }
-     .bounce { animation: buttonBounce 0.6s ease; }
-     .pulse { animation: pulse 2s infinite; }
-     .spin { animation: spin 1s linear infinite; }
+    .fadeIn { animation: fadeIn 0.5s ease-out forwards; }
+    .fadeOut { animation: fadeOut 0.3s ease-in forwards; }
+    .bounce { animation: buttonBounce 0.6s ease; }
+    .custom-pulse { animation: customPulse 2s infinite; }
   `;
 
-    return (
+  return (
     <>
       <style>{animationStyles}</style>
-      <div style={{
-        minHeight: '100vh',
-        backgroundColor: '#f5e6d3',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-        padding: '20px'
-      }}>
-        <div style={{
-          backgroundColor: 'transparent',
-          maxWidth: '400px',
-          width: '100%',
-          textAlign: 'center'
-        }}>
-          {/* Sleeping illustration */}
-          <div style={{
-            fontSize: '120px',
-            marginBottom: '20px',
-            lineHeight: '1'
-          }}>
-            😴
+      <div
+        className="min-h-screen flex items-center justify-center font-sans p-5"
+        style={{ backgroundColor: "#f5e6d3" }}
+      >
+        <div className="bg-transparent max-w-sm w-full text-center">
+          {/* Logo */}
+          <div className="mb-5 leading-none">
+            <img
+              src="/sleep_logo.svg"
+              alt="Logo"
+              className="object-contain mx-auto"
+            />
           </div>
-          
-          {/* Main title */}
-          <h1 style={{
-            color: '#2a2a2a',
-            marginBottom: '40px',
-            fontSize: '28px',
-            fontWeight: '600',
-            fontFamily: 'Arial, sans-serif'
-          }}>
-            วันนี้ฉันจะนอน
-          </h1>
-
-                  {/* Language selector buttons */}
-          <div style={{ 
-            marginBottom: '40px',
-            display: 'flex',
-            gap: '12px',
-            justifyContent: 'center'
-          }}>
+          {/* Language selector buttons */}
+          <div className="mb-10 flex gap-3 justify-center">
             <button
-              onClick={() => setLanguage('thai')}
+              onClick={() => setLanguage("thai")}
+              className={`${
+                language === "thai" ? "bg-yellow-400" : "bg-white"
+              } py-4 px-8 rounded-full cursor-pointer text-lg font-semibold transition-all duration-300 transform hover:-translate-y-0.5 border-4`}
               style={{
-                backgroundColor: language === 'thai' ? '#f4c430' : '#ffffff',
-                color: '#2a2a2a',
-                border: '3px solid #2a2a2a',
-                padding: '16px 32px',
-                borderRadius: '50px',
-                cursor: 'pointer',
-                fontSize: '18px',
-                fontWeight: '600',
-                transition: 'all 0.3s ease',
-                minWidth: '120px'
+                color: "#2a2a2a",
+                borderColor: "#2a2a2a",
+                minWidth: "120px",
               }}
             >
               Thai
             </button>
             <button
-              onClick={() => setLanguage('english')}
+              onClick={() => setLanguage("english")}
+              className={`${
+                language === "english" ? "bg-yellow-400" : "bg-white"
+              } py-4 px-8 rounded-full cursor-pointer text-lg font-semibold transition-all duration-300 transform hover:-translate-y-0.5 border-4`}
               style={{
-                backgroundColor: language === 'english' ? '#f4c430' : '#ffffff',
-                color: '#2a2a2a',
-                border: '3px solid #2a2a2a',
-                padding: '16px 32px',
-                borderRadius: '50px',
-                cursor: 'pointer',
-                fontSize: '18px',
-                fontWeight: '600',
-                transition: 'all 0.3s ease',
-                minWidth: '120px'
+                color: "#2a2a2a",
+                borderColor: "#2a2a2a",
+                minWidth: "120px",
               }}
             >
               English
             </button>
           </div>
 
-                           {/* Excuse display area */}
-          <div 
-            className={animationClass}
+          {/* Excuse display area */}
+          <div
+            className={`${animationClass} bg-white py-10 px-7 mb-10 flex items-center justify-center border-4`}
             style={{
-              backgroundColor: '#ffffff',
-              borderRadius: '30px',
-              padding: '40px 30px',
-              marginBottom: '40px',
-              minHeight: '150px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: '3px solid #2a2a2a',
-              boxShadow: '0 4px 0 #2a2a2a'
-            }}>
+              borderRadius: "30px",
+              minHeight: "150px",
+              borderColor: "#2a2a2a",
+              boxShadow: "0 4px 0 #2a2a2a",
+            }}
+          >
             {currentExcuse ? (
-              <p style={{
-                fontSize: '20px',
-                color: '#2a2a2a',
-                lineHeight: '1.4',
-                margin: 0,
-                textAlign: 'center',
-                fontWeight: '500'
-              }}>
+              <p
+                className="text-xl leading-relaxed m-0 text-center font-medium"
+                style={{ color: "#2a2a2a" }}
+              >
                 "{currentExcuse}"
               </p>
             ) : (
-              <p style={{
-                fontSize: '18px',
-                color: '#888',
-                margin: 0,
-                textAlign: 'center'
-              }}>
-                {language === 'thai' 
-                  ? 'กดปุ่มเพื่อสุ่มข้ออ้างใหม่!' 
-                  : 'Click the button to generate an excuse!'}
+              <p className="text-lg text-gray-500 m-0 text-center">
+                {language === "thai"
+                  ? "กดปุ่มเพื่อสุ่มข้ออ้างใหม่!"
+                  : "Click the button to generate an excuse!"}
               </p>
             )}
           </div>
 
-                                     {/* Random button */}
+          {/* Random button */}
           <button
-            className={!currentExcuse ? 'pulse' : ''}
-            disabled={isAnimating}
+            className={`${!currentExcuse ? "custom-pulse" : ""} ${
+              isAnimating ? "opacity-70 cursor-not-allowed" : "cursor-pointer"
+            } py-5 px-16 rounded-full text-xl font-semibold transition-all duration-300 transform hover:-translate-y-0.5 border-4`}
             style={{
-              backgroundColor: isAnimating ? '#d4af37' : '#f4c430',
-              color: '#2a2a2a',
-              border: '3px solid #2a2a2a',
-              padding: '20px 60px',
-              borderRadius: '50px',
-              fontSize: '22px',
-              fontWeight: '600',
-              cursor: isAnimating ? 'not-allowed' : 'pointer',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 4px 0 #2a2a2a',
-              opacity: isAnimating ? 0.7 : 1,
-              minWidth: '200px'
+              backgroundColor: isAnimating ? "#d4af37" : "#f4c430",
+              color: "#2a2a2a",
+              borderColor: "#2a2a2a",
+              boxShadow: "0 4px 0 #2a2a2a",
+              minWidth: "200px",
             }}
-            onMouseOver={(e) => {
+            onMouseEnter={(e) => {
               if (!isAnimating) {
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 0 #2a2a2a';
+                e.target.style.boxShadow = "0 6px 0 #2a2a2a";
               }
             }}
-            onMouseOut={(e) => {
+            onMouseLeave={(e) => {
               if (!isAnimating) {
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 0 #2a2a2a';
+                e.target.style.boxShadow = "0 4px 0 #2a2a2a";
               }
             }}
+            disabled={isAnimating}
             onClick={(e) => {
               if (!isAnimating) {
-                e.target.classList.add('bounce');
+                e.target.classList.add("bounce");
                 setTimeout(() => {
-                  e.target.classList.remove('bounce');
+                  e.target.classList.remove("bounce");
                 }, 600);
                 generateExcuse();
               }
             }}
           >
             {isAnimating ? (
-              <><span className="spin">🔄</span> {language === 'thai' ? 'กำลังสุ่ม...' : 'Generating...'}</>
+              <>
+                <span className="animate-spin inline-block">🔄</span>{" "}
+                {language === "thai" ? "กำลังสุ่ม..." : "Generating..."}
+              </>
             ) : (
-              <>{language === 'thai' ? 'Random' : 'Random'}</>
+              <>{language === "thai" ? "Random" : "Random"}</>
             )}
           </button>
         </div>
@@ -302,4 +243,4 @@ const ExcuseGenerator = () => {
   );
 };
 
-export default ExcuseGenerator; 
+export default ExcuseGenerator;
