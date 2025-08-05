@@ -11,6 +11,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import BubblePage from './pages/BubblePage';
 import ExcuseGenerator from './pages/ExcuseGenerator';
 import CountdownPage from './pages/CountdownPage';
+import TripPlannerPage from './pages/TripPlannerPage';
 import './i18n';
 
 // Protected Route Component
@@ -80,6 +81,9 @@ function App() {
             </Route>
             <Route exact path="/countdown">
               <CountdownPage />
+            </Route>
+            <Route exact path="/trip-planner">
+              <TripPlannerPage />
             </Route>
             <Route path="*">
               <AppContent />

@@ -4,6 +4,7 @@ import { useBooking } from '../contexts/BookingContext';
 import DatePicker from '../components/DatePicker';
 import TimeSlotSelector from '../components/TimeSlotSelector';
 import PaymentForm from '../components/PaymentForm';
+import { StyledButton } from '../utils/sharedStyles';
 
 const BookingPage = () => {
   const { t } = useTranslation();
@@ -48,19 +49,17 @@ const BookingPage = () => {
 
   if (bookingSuccess) {
     return (
-      <div className="container">
-        <div className="booking-card" style={{ textAlign: 'center' }}>
-          <div className="success">
-            <h2>{t('bookingConfirmed')}</h2>
-            <p>Booking ID: {bookingId}</p>
-            <p>Thank you for your booking!</p>
-            <button 
-              onClick={handleNewBooking}
-              className="btn btn-primary"
-              style={{ marginTop: '20px' }}
-            >
-              {t('bookNow')} (New)
-            </button>
+      <div className="min-h-screen bg-gray-50 p-4">
+        <div className="max-w-md mx-auto">
+          <div className="booking-card">
+            <div className="success">
+              <h2 className="text-2xl font-bold mb-4">{t('bookingConfirmed')}</h2>
+              <p className="text-lg mb-2">Booking ID: {bookingId}</p>
+              <p className="mb-6">Thank you for your booking!</p>
+              <StyledButton onClick={handleNewBooking}>
+                {t('bookNow')} (New)
+              </StyledButton>
+            </div>
           </div>
         </div>
       </div>
@@ -69,39 +68,40 @@ const BookingPage = () => {
 
   if (showPayment) {
     return (
-      <div className="container">
-        <PaymentForm 
-          onPaymentSuccess={handlePaymentSuccess}
-          onCancel={handlePaymentCancel}
-        />
+      <div className="min-h-screen bg-gray-50 p-4">
+        <div className="max-w-md mx-auto">
+          <PaymentForm 
+            onPaymentSuccess={handlePaymentSuccess}
+            onCancel={handlePaymentCancel}
+          />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container">
-      {error && <div className="error">{error}</div>}
-      
-      <div style={{ display: 'grid', gap: '30px', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
-        <DatePicker />
-        <TimeSlotSelector />
-      </div>
-
-      {selectedTimeSlot && (
-        <div style={{ textAlign: 'center', marginTop: '30px' }}>
-          <button 
-            onClick={handleBookNow}
-            className="btn btn-primary"
-            style={{ 
-              fontSize: '18px', 
-              padding: '15px 40px',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-            }}
-          >
-            {t('bookNow')}
-          </button>
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-4xl mx-auto">
+        {error && <div className="error mb-6">{error}</div>}
+        
+        <div className="grid gap-6 md:grid-cols-2 mb-8">
+          <div className="booking-card">
+            <DatePicker />
+          </div>
+          <div className="booking-card">
+            <TimeSlotSelector />
+          </div>
         </div>
-      )}
+
+        {selectedTimeSlot && (
+          <div className="booking-card text-center">
+            <h3 className="text-xl font-semibold mb-4">Ready to book your class?</h3>
+            <StyledButton onClick={handleBookNow}>
+              {t('bookNow')}
+            </StyledButton>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

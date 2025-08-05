@@ -26,7 +26,11 @@ const Homepage = () => {
         Countdown to Forget
         </StyledButton>
 
-        {/* <StyledButton onClick={() => navigateToPage("/booking")}>
+        <StyledButton onClick={() => navigateToPage("/trip-planner")}>
+        ✈️ วางแผนเที่ยว
+        </StyledButton>
+{/* 
+        <StyledButton onClick={() => navigateToPage("/booking")}>
           โยคะคลาสวันนี้
         </StyledButton>
 
