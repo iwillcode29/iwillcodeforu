@@ -5,10 +5,10 @@ import { countdownColors, countdownLabels } from "../utils/countdownData";
 export const SettingsButton = ({ showSettings, setShowSettings }) => (
   <button
     onClick={() => setShowSettings(!showSettings)}
-    className="absolute top-6 right-6 text-black hover:text-pink-300 transition-colors duration-300"
+    className="absolute top-6 right-6 text-black hover:opacity-70 transition-all duration-300 bg-white bg-opacity-90 backdrop-blur-md rounded-full p-2 shadow-lg border border-gray-200"
   >
     <svg
-      className="w-6 h-6"
+      className="w-5 h-5"
       fill="none"
       stroke="currentColor"
       viewBox="0 0 24 24"
@@ -40,36 +40,72 @@ export const SettingsPanel = ({
   if (!showSettings) return null;
 
   return (
-    <div className="absolute top-16 right-6 bg-black backdrop-blur-md rounded-lg p-4 z-50 border border-white border-opacity-20">
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2 text-white">
-          ชื่อของเขา/เธอ:
-        </label>
-        <input
-          type="text"
-          value={personName}
-          onChange={(e) => setPersonName(e.target.value)}
-          className="w-full px-3 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-md text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-400"
-          placeholder="ใส่ชื่อ..."
-        />
+    <div className="absolute top-16 right-6 z-50 w-80">
+      <div className="booking-card">
+        <h3 style={{ 
+          marginBottom: '20px', 
+          color: colorPalette.text,
+          fontSize: '1.2rem',
+          fontWeight: '600'
+        }}>
+          ตั้งค่า
+        </h3>
+
+        <div className="form-group">
+          <label style={{ 
+            color: colorPalette.text,
+            fontSize: '14px',
+            fontWeight: '500'
+          }}>
+            ชื่อของเขา/เธอ:
+          </label>
+          <input
+            type="text"
+            value={personName}
+            onChange={(e) => setPersonName(e.target.value)}
+            placeholder="ใส่ชื่อ..."
+            style={{
+              backgroundColor: '#fff',
+              color: colorPalette.text,
+              border: `2px solid #ddd`,
+              borderRadius: '8px'
+            }}
+          />
+        </div>
+
+        <div className="form-group">
+          <label style={{ 
+            color: colorPalette.text,
+            fontSize: '14px',
+            fontWeight: '500'
+          }}>
+            วันที่จะลืม:
+          </label>
+          <input
+            type="date"
+            value={targetDate}
+            onChange={(e) => setTargetDate(e.target.value)}
+            style={{
+              backgroundColor: '#fff',
+              color: colorPalette.text,
+              border: `2px solid #ddd`,
+              borderRadius: '8px'
+            }}
+          />
+        </div>
+
+        <button
+          onClick={() => setShowSettings(false)}
+          className="btn btn-primary"
+          style={{ 
+            width: '100%',
+            marginTop: '10px',
+            fontSize: '14px'
+          }}
+        >
+          บันทึก
+        </button>
       </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2 text-white">
-          วันที่จะลืม:
-        </label>
-        <input
-          type="date"
-          value={targetDate}
-          onChange={(e) => setTargetDate(e.target.value)}
-          className="w-full px-3 py-2 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-pink-400"
-        />
-      </div>
-      <button
-        onClick={() => setShowSettings(false)}
-        className="w-full bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded-md transition-colors duration-300 text-white"
-      >
-        บันทึก
-      </button>
     </div>
   );
 };
