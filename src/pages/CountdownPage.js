@@ -27,7 +27,6 @@ const CountdownPage = () => {
     minutes: 0,
     seconds: 0,
   });
-  const [personName, setPersonName] = useState(defaultPersonName);
   const [showSettings, setShowSettings] = useState(false);
   
 
@@ -60,19 +59,16 @@ const CountdownPage = () => {
       <SettingsPanel
         showSettings={showSettings}
         setShowSettings={setShowSettings}
-        personName={personName}
-        setPersonName={setPersonName}
         targetDate={targetDate}
         setTargetDate={setTargetDate}
       />
 
       <div className="text-center z-10 px-4 max-w-4xl mx-auto">
-        <CountdownTitle personName={personName} />
+        <CountdownTitle />
 
         <CountdownDisplay 
           timeLeft={timeLeft}
           isExpired={isExpired}
-          personName={personName}
         />
 
         <QuoteSection />
