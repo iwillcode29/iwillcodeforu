@@ -48,7 +48,7 @@ const CountdownPage = () => {
 
   return (
     <div 
-      className="min-h-screen p-4 relative flex flex-col items-center justify-center" 
+      className="h-screen p-4 relative flex flex-col items-center justify-center" 
       style={{ backgroundColor: colorPalette.background }}
     >
       <SettingsButton 
